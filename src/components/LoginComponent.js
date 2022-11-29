@@ -1,68 +1,96 @@
 import React, { useState } from "react";
-//import { useNavigate } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 import "./LoginComponent.css";
 import Form from "react-bootstrap/Form";
 import { Link } from "react-router-dom";
-export default function LoginComponent() {
-  const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userName: "sravantich", password: "test" }),
+import {
+  CButton,
+  CCard,
+  CCardBody,
+  CCardGroup,
+  CCol,
+  CContainer,
+  CForm,
+  CFormInput,
+  CInputGroup,
+  CInputGroupText,
+  CRow,
+} from "@coreui/react";
+import CIcon from "@coreui/icons-react";
+import { cilLockLocked, cilUser } from "@coreui/icons";
+import { useEffect } from "react";
+export default function LoginComponent(props) {
+  const [formData, setFormData] = useState({});
+  let [userNameError, setUserNameError] = useState("");
+  let [passwordError, setPasswordError] = useState("");
+  let [validUserError, setValidUserError] = useState("");
+  let [disable, setDisable] = useState(true);
+  const navigate = useNavigate();
+  const handleChange = ({ target }) => {
+    setFormData({ ...formData, [target.name]: target.value });
+    validateForm();
   };
-  function validateUser() {
-    fetch("http://localhost:9095/simplybook/user", requestOptions)
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  };
+  useEffect(() => {
+    formData.userName = "";
+    formData.password = "";
+    setUserNameError("");
+    setPasswordError("");
+  }, [""]);
+  const handleSubmit = async (evt) => {
+    validateForm();
+    if (userNameError === "" && passwordError === "") {
+      try {
+        fetch(
+          "http://localhost:9095/simplybook/user/" +
+            formData.userName +
+            "/" +
+            formData.password,
+          requestOptions
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            if (!data) {
+              setValidUserError("User not found !!");
+            } else {
+              localStorage.setItem("user", formData.userName);
+              fetchData();
+            }
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      evt.preventDefault();
+    }
+  };
+  const requestUserOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  };
+  function fetchData() {
+    fetch(
+      "http://localhost:9095/simplybook/user/" + formData.userName,
+      requestUserOptions
+    )
       .then((response) => response.json())
       .then((data) => {
-        console.log("Is Valid User" + data);
+        localStorage.setItem("firstName", data.firstName);
+        localStorage.setItem("lastName", data.lastName);
+        localStorage.setItem("role", data.userRole);
+        navigate("/landing/dashboard", { replace: true }, {});
       });
   }
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const [userNameError, setUserNameError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  //let navigate = useNavigate();
-  const handleSubmit = (event) => {
-    var userNameValid = false;
-    if (userName.length === 0) {
-      setUserNameError("UserName is required");
-    } else if (userName.length < 6) {
-      setUserNameError("UserName should be minimum 6 characters");
-    } else if (userName.indexOf(" ") >= 0) {
-      setUserNameError("UserName cannot contain spaces");
-    } else {
-      setUserNameError("");
-      userNameValid = true;
-    }
 
-    var passwordValid = false;
-    if (password.length === 0) {
-      setPasswordError("Password is required");
-    } else if (password.length < 6) {
-      setPasswordError("Password should be minimum 6 characters");
-    } else if (password.indexOf(" ") >= 0) {
-      setPasswordError("Password cannot contain spaces");
-    } else {
-      setPasswordError("");
-      passwordValid = true;
-    }
-    if (userNameValid && passwordValid) {
-      alert("UserName: " + userName + "\nPassword: " + password);
-      setUserName("");
-      setPassword("");
-      //navigate("/dashboard");
-    } else {
-      event.preventDefault();
-    }
-  };
-  const handleChange = (event) => {
-    if (event.target.name === "userName") {
-      setUserName(event.target.value);
-    } else if (event.target.name === "password") {
-      setPassword(event.target.value);
-    }
-
-    if (userName.length === 0) {
+  const validateForm = () => {
+    const { userName, password } = formData;
+    setUserNameError("");
+    setPasswordError("");
+    setValidUserError("");
+    if (!userName) {
       setUserNameError("UserName is required");
     } else if (userName.length < 6) {
       setUserNameError("UserName should be minimum 6 characters");
@@ -71,8 +99,7 @@ export default function LoginComponent() {
     } else {
       setUserNameError("");
     }
-
-    if (password.length === 0) {
+    if (!password) {
       setPasswordError("Password is required");
     } else if (password.length < 6) {
       setPasswordError("Password should be minimum 6 characters");
@@ -80,55 +107,107 @@ export default function LoginComponent() {
       setPasswordError("Password cannot contain spaces");
     } else {
       setPasswordError("");
+    }
+
+    if (userNameError === "" && passwordError === "") {
+      setDisable(false);
     }
   };
   return (
     <>
-      <div className="Auth-form-container">
-        <form className="Auth-form">
-          <div className="Auth-form-content">
-            <h3 className="Auth-form-title">Login to your account</h3>
-            <div className="form-group mt-3">
-              <label>User Name:</label>
-              <input
-                type="text"
-                className="form-control mt-1"
-                placeholder="Enter user name"
-                name="userName"
-                onChange={(event) => handleChange(event)}
-                onBlur={(event) => handleChange(event)}
-                value={userName}
-              />
-              <Form.Text style={{ color: "red" }}>{userNameError}</Form.Text>
-            </div>
-            <div className="form-group mt-3">
-              <label>Password:</label>
-              <input
-                type="password"
-                className="form-control mt-1"
-                name="password"
-                onChange={(event) => handleChange(event)}
-                onBlur={(event) => handleChange(event)}
-                value={password}
-              />
-              <Form.Text>{passwordError}</Form.Text>
-            </div>
-            <div className="d-grid gap-2 mt-3">
-              <button
-                type="submit"
-                onClick={handleSubmit}
-                className="btn btn-primary"
-              >
-                Login
-              </button>
-            </div>
-
-            <Form.Text>
-              Don't have an account yet? &nbsp;
-              <Link to="/signup">Create an account</Link>
-            </Form.Text>
-          </div>
-        </form>
+      <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+        <CContainer className="containerCss login">
+          <CRow className="justify-content-center">
+            <CCol md={8}>
+              <CForm>
+                <CCardGroup>
+                  <CCard className="p-4">
+                    <CCardBody>
+                      <h1>Login</h1>
+                      <p className="text-medium-emphasis">
+                        Sign In to your account
+                      </p>
+                      <CInputGroup className="mb-3">
+                        <CInputGroupText>
+                          <CIcon icon={cilUser} />
+                        </CInputGroupText>
+                        <CFormInput
+                          placeholder="Username"
+                          name="userName"
+                          autoComplete="off"
+                          value={formData.userName || ""}
+                          onChange={handleChange}
+                          onBlur={handleChange}
+                        />
+                      </CInputGroup>
+                      <Form.Text style={{ color: "red" }}>
+                        {userNameError}
+                      </Form.Text>
+                      <CInputGroup className="mb-4">
+                        <CInputGroupText>
+                          <CIcon icon={cilLockLocked} />
+                        </CInputGroupText>
+                        <CFormInput
+                          type="password"
+                          placeholder="Password"
+                          name="password"
+                          value={formData.password || ""}
+                          autoComplete="off"
+                          onChange={handleChange}
+                          onBlur={handleChange}
+                        />
+                      </CInputGroup>
+                      <Form.Text style={{ color: "red" }}>
+                        {passwordError}
+                      </Form.Text>
+                      <CRow>
+                        <CCol xs={6}>
+                          <CButton
+                            color="primary"
+                            className="px-4"
+                            disabled={disable}
+                            onClick={handleSubmit}
+                          >
+                            Login
+                          </CButton>
+                        </CCol>
+                        <CCol xs={6} className="text-right">
+                          <CButton color="link" className="px-0">
+                            Forgot password?
+                          </CButton>
+                        </CCol>
+                        <Form.Text style={{ color: "red" }}>
+                          {validUserError}
+                        </Form.Text>
+                      </CRow>
+                    </CCardBody>
+                  </CCard>
+                  <CCard
+                    className="text-white bg-primary py-5"
+                    style={{ width: "44%" }}
+                  >
+                    <CCardBody className="text-center">
+                      <div>
+                        <h2>Sign up</h2>
+                        <p>What are you waiting for? Sign up is Free !</p>
+                        <Link to="/signup">
+                          <CButton
+                            color="primary"
+                            className="mt-3"
+                            active
+                            tabIndex={-1}
+                          >
+                            Register Now!
+                          </CButton>
+                        </Link>
+                      </div>
+                    </CCardBody>
+                  </CCard>
+                </CCardGroup>
+              </CForm>
+            </CCol>
+          </CRow>
+        </CContainer>
       </div>
     </>
   );

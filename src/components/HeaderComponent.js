@@ -2,7 +2,9 @@ import { Container, Nav, Navbar, NavLink } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./HeaderComponent.css";
 import clockImage from "../assets/clockImage.png";
+import { useSelector } from "react-redux";
 const HeaderComponent = () => {
+  var headerbarShow = useSelector((state) => state.headerbarShow);
   return (
     <>
       <Navbar
@@ -10,6 +12,7 @@ const HeaderComponent = () => {
         expand="sm"
         className="color-nav"
         variant="light"
+        style={{ display: ` ${headerbarShow}` }}
       >
         <Container>
           <Navbar.Brand href="#home">
@@ -37,9 +40,6 @@ const HeaderComponent = () => {
               </NavLink>
               <NavLink eventKey="2" as={Link} to="/login">
                 LOGIN
-              </NavLink>
-              <NavLink eventKey="3" as={Link} to="/signup">
-                SIGN UP
               </NavLink>
             </Nav>
           </Navbar.Collapse>

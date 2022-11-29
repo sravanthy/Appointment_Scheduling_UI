@@ -1,22 +1,25 @@
 import "./App.css";
 import FooterComponent from "./components/FooterComponent";
 import HeaderComponent from "./components/HeaderComponent";
-import { Route, Switch } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import LoginComponent from "./components/LoginComponent";
 import RegisterComponent from "./components/RegisterComponent";
 import MainComponent from "./components/MainComponent";
-import DashBoardComponent from "./components/DashBoardComponent";
+import DefaultLayout from "./components/layout/DefaultLayout";
+import "../src/scss/style.scss";
+import Logout from "./components/LogoutComponent";
 function App() {
   return (
     <>
       <HeaderComponent />
-      <Switch>
-        <Route exact path="/" component={MainComponent} />
-        <Route path="/home" component={MainComponent} />
-        <Route path="/login" component={LoginComponent} />
-        <Route path="/signup" component={RegisterComponent} />
-        <Route path="/dashboard" component={DashBoardComponent} />
-      </Switch>
+      <Routes>
+        <Route exact path="/" element={<MainComponent />} />
+        <Route path="/home" element={<MainComponent />} />
+        <Route path="/login" element={<LoginComponent />} />
+        <Route path="/signup" element={<RegisterComponent />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="*" element={<DefaultLayout />} />
+      </Routes>
 
       <FooterComponent />
     </>
