@@ -15,9 +15,12 @@ import SimpleBar from "simplebar-react";
 import "simplebar/dist/simplebar.min.css";
 import CIcon from "@coreui/icons-react";
 import {
+  cibClockify,
+  cilAddressBook,
   cilCalendarCheck,
   cilEnvelopeClosed,
   cilHome,
+  cilHospital,
   cilList,
   cilUser,
 } from "@coreui/icons";
@@ -35,8 +38,32 @@ const AppSidebar = ({ role }) => {
       {
         component: CNavItem,
         name: "Dashboard",
-        to: "/landing/dashboard",
+        to: "/landing/dashboardA",
         icon: <CIcon icon={cilHome} customClassName="nav-icon" />,
+      },
+      {
+        component: CNavItem,
+        name: "Services",
+        to: "/landing/services",
+        icon: <CIcon icon={cilHospital} customClassName="nav-icon" />,
+      },
+      {
+        component: CNavItem,
+        name: "Locations",
+        to: "/landing/locations",
+        icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
+      },
+      {
+        component: CNavItem,
+        name: "TimeSlots",
+        to: "/landing/timeslots",
+        icon: <CIcon icon={cibClockify} customClassName="nav-icon" />,
+      },
+      {
+        component: CNavItem,
+        name: "Appointments",
+        to: "/landing/appointments",
+        icon: <CIcon icon={cilList} customClassName="nav-icon" />,
       },
     ];
   else
@@ -55,7 +82,7 @@ const AppSidebar = ({ role }) => {
       },
       {
         component: CNavItem,
-        name: "Messages",
+        name: "Inbox",
         to: "/landing/messages",
         icon: <CIcon icon={cilEnvelopeClosed} customClassName="nav-icon" />,
       },

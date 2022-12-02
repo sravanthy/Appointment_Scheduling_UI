@@ -87,12 +87,12 @@ const BookAppointment = (props) => {
     try {
       if (formData?.reasonCode != "" && formData?.reasonCode !== undefined)
         fetch(
-          "http://localhost:9095/simplybook/services/" + formData.reasonCode,
+          "http://localhost:9095/simplybook/servicesA/" + formData.reasonCode,
           requestOptions
         )
           .then((response) => response.json())
           .then((data) => {
-            setServiceCodes(data);
+            if (!data.error) setServiceCodes(data);
           });
     } catch (err) {
       console.log(err);

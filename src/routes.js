@@ -1,6 +1,9 @@
 import React from "react";
 import Logout from "./components/LogoutComponent";
-
+import Dashboard_Admin from "./components/views/dashboard/Dashboard_Admin";
+import TimeSlotComponent from "./components/views/timeSlot/TimeSlotComponent";
+import LocationsComponent from "./components/views/locations/LocationsComponent";
+import ServicesComponent from "./components/views/services/ServicesComponent";
 const Dashboard = React.lazy(() =>
   import("./components/views/dashboard/Dashboard")
 );
@@ -116,6 +119,30 @@ const routes = [
     name: "Dashboard",
     exact: true,
     element: Dashboard,
+  },
+  {
+    path: "/landing/locations",
+    name: "Locations",
+    exact: true,
+    element: LocationsComponent,
+  },
+  {
+    path: "/landing/services",
+    name: "Services",
+    exact: true,
+    element: ServicesComponent,
+  },
+  {
+    path: "/landing/dashboardA",
+    name: "Dashboard_Admin",
+    exact: true,
+    element: Dashboard_Admin,
+  },
+  {
+    path: "/landing/timeslots",
+    name: "TimeSlot",
+    exact: true,
+    element: TimeSlotComponent,
   },
   {
     path: "/landing/bookingAppointment",

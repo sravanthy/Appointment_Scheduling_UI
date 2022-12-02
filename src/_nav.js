@@ -13,8 +13,14 @@ if ("ADMIN" === localStorage.getItem("role"))
   _nav = [
     {
       component: CNavItem,
-      name: "Dashboard",
-      to: "/landing/dashboard",
+      name: "Dashboard_Admin",
+      to: "/landing/dashboardA",
+      icon: <CIcon icon={cilHome} customClassName="nav-icon" />,
+    },
+    {
+      component: CNavItem,
+      name: "LocationsComponent",
+      to: "/landing/locations",
       icon: <CIcon icon={cilHome} customClassName="nav-icon" />,
     },
   ];
@@ -34,7 +40,7 @@ else
     },
     {
       component: CNavItem,
-      name: "Messages",
+      name: "Inbox",
       to: "/landing/messages",
       icon: <CIcon icon={cilEnvelopeClosed} customClassName="nav-icon" />,
     },

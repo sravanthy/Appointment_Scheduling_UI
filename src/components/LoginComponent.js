@@ -81,7 +81,9 @@ export default function LoginComponent(props) {
         localStorage.setItem("firstName", data.firstName);
         localStorage.setItem("lastName", data.lastName);
         localStorage.setItem("role", data.userRole);
-        navigate("/landing/dashboard", { replace: true }, {});
+        if (data.userRole === "ADMIN")
+          navigate("/landing/dashboardA", { replace: true }, {});
+        else navigate("/landing/dashboard", { replace: true }, {});
       });
   }
 
@@ -171,11 +173,11 @@ export default function LoginComponent(props) {
                             Login
                           </CButton>
                         </CCol>
-                        <CCol xs={6} className="text-right">
+                        {/* <CCol xs={6} className="text-right">
                           <CButton color="link" className="px-0">
                             Forgot password?
                           </CButton>
-                        </CCol>
+                        </CCol> */}
                         <Form.Text style={{ color: "red" }}>
                           {validUserError}
                         </Form.Text>

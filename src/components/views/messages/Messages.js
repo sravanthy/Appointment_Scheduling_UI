@@ -76,10 +76,11 @@ const Messages = () => {
                     <CTableRow>
                       <CTableHeaderCell>Sl No</CTableHeaderCell>
                       <CTableHeaderCell>Message</CTableHeaderCell>
+                      <CTableHeaderCell>Sent On</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
-                    {currentTableData.map((item) => {
+                    {currentTableData?.map((item) => {
                       return (
                         <CTableRow key="{item.id}">
                           <CTableDataCell>{item.id}</CTableDataCell>
@@ -87,6 +88,7 @@ const Messages = () => {
                             {greetingMsg}@{item.reason}@{item.serviceCode}@
                             {item.locationCode}
                           </CTableDataCell>
+                          <CTableDataCell>{item.sent_on}</CTableDataCell>
                         </CTableRow>
                       );
                     })}

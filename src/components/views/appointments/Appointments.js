@@ -15,6 +15,7 @@ import {
 } from "@coreui/react";
 import { useState, useEffect, useMemo } from "react";
 import Pagination from "../../Pagination";
+import moment from "moment";
 let PageSize = 5;
 const Appointments = () => {
   const userId = localStorage.getItem("user");
@@ -41,9 +42,15 @@ const Appointments = () => {
   const currentTableData = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * PageSize;
     const lastPageIndex = firstPageIndex + PageSize;
-    return appointments.slice(firstPageIndex, lastPageIndex);
+    if (
+      (appointments && appointments.length === 0) ||
+      appointments?.length === undefined
+    ) {
+    } else {
+      return appointments.slice(firstPageIndex, lastPageIndex);
+    }
   }, [currentPage, appointments]);
-  if (appointments.error != null) {
+  if (appointments.error !== null && appointments.error !== undefined) {
     return (
       <>
         <CRow>
@@ -80,12 +87,17 @@ const Appointments = () => {
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
-                    {currentTableData.map((item) => {
+                    {currentTableData?.map((item) => {
                       var statusOption = "";
-                      if (
-                        new Date(item.appointmentTime).getDate() <
-                        new Date().getDate()
-                      ) {
+                      let appointmentDate = moment(
+                        new Date(item.appointmentDate),
+                        moment.ISO_8601
+                      ).format("MM/DD/YYYY");
+                      let todayDate = moment(
+                        new Date(),
+                        moment.ISO_8601
+                      ).format("MM/DD/YYYY");
+                      if (appointmentDate < todayDate) {
                         item.status = "CLOSED";
                         statusOption = (
                           <CTableDataCell>
@@ -94,7 +106,7 @@ const Appointments = () => {
                             </CBadge>
                           </CTableDataCell>
                         );
-                      } else {
+                      } else if (new Date(appointmentDate >= todayDate)) {
                         statusOption = (
                           <CTableDataCell>
                             <CBadge color="success" shape="rounded-pill">
